@@ -13,6 +13,8 @@ A professional web-based workout tracking application for **Rest-Pause (Dog Crap
 - ✅ **Progress Analytics**: Visual charts for strength and volume progression
 - ✅ **CSV Export**: Export data for backup and analysis
 - ✅ **Full Backup/Restore**: JSON backup for complete data preservation
+- ✅ **Last Workout Comparison**: See your previous performance instantly when selecting exercises (v1.1.0)
+- ✅ **Dark Mode Theme**: Full dark mode support with toggle switch (v1.1.0)
 
 ### Training Plans
 
@@ -81,13 +83,17 @@ For detailed installation guide including:
 
 1. Select a **muscle group** from the plan
 2. Choose an **exercise** from the dropdown
-3. Add **mini-sets** (Rest-Pause):
+3. **View Last Performance** 📊 - Automatically displays your previous workout data:
+   - Date of last session
+   - Weights and reps from each set
+   - Total reps achieved
+4. Add **mini-sets** (Rest-Pause):
    - Enter weight (kg) - supports decimals (e.g., 87.5)
    - Enter reps (e.g., 10)
    - Click **"+ Add Mini-Set"**
    - Repeat for each rest-pause set
-4. Click **"✓ Save Exercise"** when complete
-5. Click **"✓ Finish Workout"** when done
+5. Click **"✓ Save Exercise"** when complete
+6. Click **"✓ Finish Workout"** when done
 
 ### Viewing Progress
 
@@ -172,6 +178,15 @@ dogcrap-tracker/
 
 ## 🎨 Key Features Explained
 
+### Last Workout Comparison (New in v1.1.0) 📊
+
+Perfect for gym sessions - instantly see what you did last time:
+- **Automatic Display**: When you select an exercise, your previous performance appears
+- **Complete History**: View all sets with exact weights and reps from your last session
+- **Date & Plan Context**: Know when and which plan you last performed the exercise
+- **Progressive Overload**: Easy to beat your previous numbers with data right in front of you
+- **No Memory Required**: Never forget what weight you used last time
+
 ### Rest-Pause Training Support
 
 The app is specifically designed for Dog Crap training methodology:
@@ -252,19 +267,37 @@ export const EXERCISE_DATABASE = {
 };
 ```
 
-## 📈 Future Enhancements (Roadmap)
+## 📈 Roadmap & Version History
 
-### Phase 2 (Q1 2025)
-- [ ] Last-workout comparison during session
+### ✅ Completed Features
+
+#### v1.1.0 (December 2024)
+- ✅ **Last-workout comparison during session** - View previous performance when selecting exercises
+- ✅ **Dark mode theme** - Full dark mode support with persistent toggle
+
+#### v1.0.0 (December 2024)
+- ✅ Multi-user support (Chris & Denis)
+- ✅ Plan A/B tracking system
+- ✅ Rest-pause mini-sets recording
+- ✅ Workout history and analytics
+- ✅ CSV export and JSON backup/restore
+- ✅ LocalStorage data persistence
+- ✅ Comprehensive documentation suite
+
+### 🚧 Upcoming Features
+
+#### Phase 2 (Q1 2025)
 - [ ] Exercise notes/form tips
 - [ ] Advanced analytics (1RM calculator, deload recommendations)
-- [ ] Dark mode theme
+- [ ] Custom exercise creation improvements
+- [ ] Workout templates
 
-### Phase 3 (Q2 2025)
+#### Phase 3 (Q2 2025)
 - [ ] Progressive Web App (PWA)
 - [ ] Mobile app (React Native)
 - [ ] Cloud sync between devices
 - [ ] Rest-pause timer integration
+- [ ] Social features (share workouts with training partner)
 
 ## 🤝 Contributing
 
@@ -357,4 +390,4 @@ npm run dev
 
 **Built with 💪 for serious training tracking**
 
-*Version 1.0 - December 2024*
+*Version 1.1.0 - December 2024*

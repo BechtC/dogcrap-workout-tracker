@@ -4,6 +4,7 @@ import Dashboard from './components/Dashboard';
 import NewWorkout from './components/NewWorkout';
 import WorkoutHistory from './components/WorkoutHistory';
 import Analytics from './components/Analytics';
+import Competition from './components/Competition';
 import Settings from './components/Settings';
 
 function AppContent() {
@@ -19,6 +20,8 @@ function AppContent() {
         return <WorkoutHistory />;
       case 'analytics':
         return <Analytics />;
+      case 'competition':
+        return <Competition />;
       case 'settings':
         return <Settings />;
       default:

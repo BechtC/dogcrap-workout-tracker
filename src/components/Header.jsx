@@ -87,6 +87,16 @@ const Header = () => {
             Analytics
           </button>
           <button
+            onClick={() => setView('competition')}
+            className={`px-4 py-2 rounded-md font-medium transition-all ${
+              view === 'competition'
+                ? 'bg-white text-blue-700'
+                : 'text-white hover:bg-white/20'
+            }`}
+          >
+            Competition
+          </button>
+          <button
             onClick={() => setView('settings')}
             className={`px-4 py-2 rounded-md font-medium transition-all ${
               view === 'settings'

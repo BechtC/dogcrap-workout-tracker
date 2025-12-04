@@ -8,7 +8,8 @@ import {
   addWorkout,
   updateWorkout,
   deleteWorkout,
-  getLastWorkoutForPlan
+  getLastWorkoutForPlan,
+  getLastExerciseData
 } from '../utils/storage';
 
 const AppContext = createContext();
@@ -157,6 +158,10 @@ export const AppProvider = ({ children }) => {
     return getLastWorkoutForPlan(currentUser, plan);
   };
 
+  const getLastExercise = (exerciseName) => {
+    return getLastExerciseData(currentUser, exerciseName);
+  };
+
   const value = {
     // State
     currentUser,
@@ -184,7 +189,8 @@ export const AppProvider = ({ children }) => {
 
     // Utilities
     refreshWorkouts,
-    getLastWorkout
+    getLastWorkout,
+    getLastExercise
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

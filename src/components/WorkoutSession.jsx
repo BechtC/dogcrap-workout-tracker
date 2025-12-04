@@ -12,7 +12,8 @@ const WorkoutSession = () => {
     updateSetInExercise,
     deleteSetFromExercise,
     deleteExerciseFromWorkout,
-    saveWorkout
+    saveWorkout,
+    getLastExercise
   } = useApp();
 
   const [currentExercise, setCurrentExercise] = useState({
@@ -34,6 +35,11 @@ const WorkoutSession = () => {
   const exercises = currentExercise.muscle_group
     ? getExercisesForMuscleWithCustom(currentExercise.muscle_group)
     : [];
+
+  // Get last workout data for the selected exercise
+  const lastExerciseData = currentExercise.exercise_name
+    ? getLastExercise(currentExercise.exercise_name)
+    : null;
 
   const handleAddSet = () => {
     if (!currentSet.weight_kg || !currentSet.reps) {
@@ -152,12 +158,12 @@ const WorkoutSession = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left: Add New Exercise */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-xl font-bold text-gray-800 mb-4">Add Exercise</h3>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-200">
+          <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Add Exercise</h3>
 
           {/* Muscle Group Selection */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Muscle Group
             </label>
             <select
@@ -169,7 +175,7 @@ const WorkoutSession = () => {
                   exercise_name: ''
                 })
               }
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
             >
               <option value="">Select muscle group...</option>
               {muscles.map((muscle) => (
@@ -182,7 +188,7 @@ const WorkoutSession = () => {
 
           {/* Exercise Selection */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Exercise
             </label>
             <div className="flex gap-2">
@@ -216,10 +222,45 @@ const WorkoutSession = () => {
             </div>
           </div>
 
+          {/* Last Workout Reference */}
+          {lastExerciseData && (
+            <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/30 border-2 border-blue-300 dark:border-blue-700 rounded-lg">
+              <div className="flex items-start gap-2 mb-3">
+                <span className="text-2xl">📊</span>
+                <div className="flex-1">
+                  <div className="font-bold text-blue-800 dark:text-blue-300 mb-1">
+                    Last Time You Did This Exercise
+                  </div>
+                  <div className="text-sm text-blue-700 dark:text-blue-400">
+                    {new Date(lastExerciseData.date).toLocaleDateString('de-DE')} - Plan {lastExerciseData.plan}
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                {lastExerciseData.sets.map((set, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-center gap-2 text-sm p-2 bg-blue-100 dark:bg-blue-800/40 rounded"
+                  >
+                    <span className="text-blue-600 dark:text-blue-400 font-medium w-12">Set {set.set_number}</span>
+                    <span className="font-bold text-blue-800 dark:text-blue-200">
+                      {set.weight_kg} kg × {set.reps} reps
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-2 text-sm font-bold text-blue-600 dark:text-blue-400">
+                Total: {calculateTotalReps(lastExerciseData.sets)} reps
+              </div>
+            </div>
+          )}
+
           {/* Mini-Sets Entry */}
           {currentExercise.exercise_name && (
             <div className="border-t pt-4 mt-4">
-              <h4 className="font-medium text-gray-800 mb-3">
+              <h4 className="font-medium text-gray-800 dark:text-white mb-3">
                 Mini-Sets (Rest-Pause)
               </h4>
 
@@ -229,7 +270,7 @@ const WorkoutSession = () => {
                   {currentExercise.sets.map((set, index) => (
                     <div
                       key={index}
-                      className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg"
+                      className="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
                     >
                       <div className="font-semibold text-gray-700 w-16">
                         Set {index + 1}
@@ -318,8 +359,8 @@ const WorkoutSession = () => {
         </div>
 
         {/* Right: Completed Exercises */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-xl font-bold text-gray-800 mb-4">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-200">
+          <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
             Completed Exercises
           </h3>
 
@@ -358,7 +399,7 @@ const WorkoutSession = () => {
                     {exercise.sets?.map((set, setIdx) => (
                       <div
                         key={setIdx}
-                        className="flex items-center gap-2 text-sm p-2 bg-gray-50 rounded"
+                        className="flex items-center gap-2 text-sm p-2 bg-gray-50 dark:bg-gray-700 rounded"
                       >
                         <span className="text-gray-600 w-12">#{set.set_number}</span>
                         <span className="font-medium">
@@ -391,13 +432,13 @@ const WorkoutSession = () => {
       {/* Add Custom Exercise Modal */}
       {showAddExerciseModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6">
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
               Add Custom Exercise
             </h3>
 
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Muscle Group
               </label>
               <input
@@ -409,7 +450,7 @@ const WorkoutSession = () => {
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Exercise Name
               </label>
               <input

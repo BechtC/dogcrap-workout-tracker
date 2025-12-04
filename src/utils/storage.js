@@ -239,3 +239,38 @@ export const getStorageSize = () => {
 export const isStorageNearLimit = () => {
   return getStorageSize() > 8;
 };
+
+/**
+ * Get the last time a specific exercise was performed by a user
+ * Returns the most recent exercise data including sets, weight, and reps
+ */
+export const getLastExerciseData = (userId, exerciseName) => {
+  const workouts = getUserWorkouts(userId);
+
+  // Sort workouts by date (most recent first)
+  const sortedWorkouts = workouts.sort((a, b) =>
+    new Date(b.date) - new Date(a.date)
+  );
+
+  // Find the most recent workout containing this exercise
+  for (const workout of sortedWorkouts) {
+    if (workout.exercises && workout.exercises.length > 0) {
+      const exercise = workout.exercises.find(
+        ex => ex.exercise_name === exerciseName
+      );
+
+      if (exercise) {
+        return {
+          date: workout.date,
+          plan: workout.plan,
+          muscle_group: exercise.muscle_group,
+          exercise_name: exercise.exercise_name,
+          sets: exercise.sets || [],
+          workout_notes: workout.notes
+        };
+      }
+    }
+  }
+
+  return null;
+};

@@ -1,0 +1,58 @@
+===============================================
+QUICK COMMANDS TO PUSH TO GITHUB
+===============================================
+
+Your git repository is already initialized and committed!
+Now just follow these 3 simple steps:
+
+===============================================
+STEP 1: Create Repository on GitHub
+===============================================
+
+1. Go to: https://github.com
+2. Click the "+" icon (top-right)
+3. Click "New repository"
+4. Repository name: dogcrap-workout-tracker
+5. Description: Professional Rest-Pause training tracker for Chris & Denis
+6. Visibility: PUBLIC (so Denis can access)
+7. DO NOT check "Initialize with README"
+8. Click "Create repository"
+
+===============================================
+STEP 2: Connect to GitHub (Replace YOUR_USERNAME!)
+===============================================
+
+Run these commands in your terminal:
+
+cd C:\Users\Becht\Python-Projecte\DogCrap\dogcrap-tracker
+
+git remote add origin https://github.com/YOUR_USERNAME/dogcrap-workout-tracker.git
+
+git remote -v
+
+===============================================
+STEP 3: Push Your Code
+===============================================
+
+git push -u origin master
+
+(If it asks for password, use a Personal Access Token from:
+ https://github.com/settings/tokens)
+
+===============================================
+DONE! Share with Denis:
+===============================================
+
+Send Denis this link:
+https://github.com/YOUR_USERNAME/dogcrap-workout-tracker
+
+He can clone it with:
+git clone https://github.com/YOUR_USERNAME/dogcrap-workout-tracker.git
+cd dogcrap-workout-tracker
+npm install
+npm run dev
+
+===============================================
+For detailed instructions, read:
+GITHUB_SETUP_GUIDE.md
+===============================================

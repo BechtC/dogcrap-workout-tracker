@@ -146,3 +146,89 @@ export const searchExercises = (query) => {
 
   return results;
 };
+
+/**
+ * Custom exercises management (stored in LocalStorage)
+ */
+const CUSTOM_EXERCISES_KEY = 'dogcrap_custom_exercises';
+
+/**
+ * Load custom exercises from LocalStorage
+ */
+export const loadCustomExercises = () => {
+  try {
+    const data = localStorage.getItem(CUSTOM_EXERCISES_KEY);
+    return data ? JSON.parse(data) : {};
+  } catch (error) {
+    console.error('Error loading custom exercises:', error);
+    return {};
+  }
+};
+
+/**
+ * Save custom exercises to LocalStorage
+ */
+export const saveCustomExercises = (customExercises) => {
+  try {
+    localStorage.setItem(CUSTOM_EXERCISES_KEY, JSON.stringify(customExercises));
+    return true;
+  } catch (error) {
+    console.error('Error saving custom exercises:', error);
+    return false;
+  }
+};
+
+/**
+ * Add a custom exercise to a muscle group
+ */
+export const addCustomExercise = (muscleGroup, exerciseName) => {
+  const customExercises = loadCustomExercises();
+
+  if (!customExercises[muscleGroup]) {
+    customExercises[muscleGroup] = [];
+  }
+
+  // Check if exercise already exists
+  if (customExercises[muscleGroup].includes(exerciseName)) {
+    return false; // Already exists
+  }
+
+  customExercises[muscleGroup].push(exerciseName);
+  saveCustomExercises(customExercises);
+  return true;
+};
+
+/**
+ * Get all exercises for a muscle group (including custom)
+ */
+export const getExercisesForMuscleWithCustom = (muscleGroup) => {
+  const baseExercises = EXERCISE_DATABASE[muscleGroup] || [];
+  const customExercises = loadCustomExercises();
+  const custom = customExercises[muscleGroup] || [];
+
+  return [...baseExercises, ...custom];
+};
+
+/**
+ * Delete a custom exercise
+ */
+export const deleteCustomExercise = (muscleGroup, exerciseName) => {
+  const customExercises = loadCustomExercises();
+
+  if (customExercises[muscleGroup]) {
+    customExercises[muscleGroup] = customExercises[muscleGroup].filter(
+      ex => ex !== exerciseName
+    );
+    saveCustomExercises(customExercises);
+    return true;
+  }
+
+  return false;
+};
+
+/**
+ * Get all custom exercises
+ */
+export const getAllCustomExercises = () => {
+  return loadCustomExercises();
+};

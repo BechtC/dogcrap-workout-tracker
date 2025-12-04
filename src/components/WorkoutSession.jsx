@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { getMusclesForPlan, getExercisesForMuscle } from '../utils/exercises';
+import { getMusclesForPlan, getExercisesForMuscleWithCustom, addCustomExercise } from '../utils/exercises';
 import { calculateTotalReps, getWorkoutStats } from '../utils/calculations';
 
 const WorkoutSession = () => {
@@ -26,9 +26,13 @@ const WorkoutSession = () => {
     reps: ''
   });
 
+  const [showAddExerciseModal, setShowAddExerciseModal] = useState(false);
+  const [newExerciseName, setNewExerciseName] = useState('');
+  const [exercisesKey, setExercisesKey] = useState(0); // Force re-render
+
   const muscles = getMusclesForPlan(activeWorkout.plan);
   const exercises = currentExercise.muscle_group
-    ? getExercisesForMuscle(currentExercise.muscle_group)
+    ? getExercisesForMuscleWithCustom(currentExercise.muscle_group)
     : [];
 
   const handleAddSet = () => {
@@ -86,6 +90,34 @@ const WorkoutSession = () => {
     }
 
     setView('dashboard');
+  };
+
+  const handleAddCustomExercise = () => {
+    if (!currentExercise.muscle_group) {
+      alert('Please select a muscle group first');
+      return;
+    }
+
+    if (!newExerciseName.trim()) {
+      alert('Please enter an exercise name');
+      return;
+    }
+
+    const success = addCustomExercise(currentExercise.muscle_group, newExerciseName.trim());
+
+    if (success) {
+      // Set the newly added exercise as selected
+      setCurrentExercise({
+        ...currentExercise,
+        exercise_name: newExerciseName.trim()
+      });
+      setNewExerciseName('');
+      setShowAddExerciseModal(false);
+      setExercisesKey(prev => prev + 1); // Force re-render to show new exercise
+      alert(`✅ "${newExerciseName.trim()}" added to ${currentExercise.muscle_group}!`);
+    } else {
+      alert('This exercise already exists in this muscle group');
+    }
   };
 
   const stats = getWorkoutStats(activeWorkout);
@@ -153,24 +185,35 @@ const WorkoutSession = () => {
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Exercise
             </label>
-            <select
-              value={currentExercise.exercise_name}
-              onChange={(e) =>
-                setCurrentExercise({
-                  ...currentExercise,
-                  exercise_name: e.target.value
-                })
-              }
-              disabled={!currentExercise.muscle_group}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
-            >
-              <option value="">Select exercise...</option>
-              {exercises.map((exercise) => (
-                <option key={exercise} value={exercise}>
-                  {exercise}
-                </option>
-              ))}
-            </select>
+            <div className="flex gap-2">
+              <select
+                key={exercisesKey}
+                value={currentExercise.exercise_name}
+                onChange={(e) =>
+                  setCurrentExercise({
+                    ...currentExercise,
+                    exercise_name: e.target.value
+                  })
+                }
+                disabled={!currentExercise.muscle_group}
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
+              >
+                <option value="">Select exercise...</option>
+                {exercises.map((exercise) => (
+                  <option key={exercise} value={exercise}>
+                    {exercise}
+                  </option>
+                ))}
+              </select>
+              <button
+                onClick={() => setShowAddExerciseModal(true)}
+                disabled={!currentExercise.muscle_group}
+                className="px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
+                title="Add custom exercise"
+              >
+                + New
+              </button>
+            </div>
           </div>
 
           {/* Mini-Sets Entry */}
@@ -344,6 +387,70 @@ const WorkoutSession = () => {
           </div>
         </div>
       </div>
+
+      {/* Add Custom Exercise Modal */}
+      {showAddExerciseModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <h3 className="text-xl font-bold text-gray-800 mb-4">
+              Add Custom Exercise
+            </h3>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Muscle Group
+              </label>
+              <input
+                type="text"
+                value={currentExercise.muscle_group}
+                disabled
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100"
+              />
+            </div>
+
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Exercise Name
+              </label>
+              <input
+                type="text"
+                value={newExerciseName}
+                onChange={(e) => setNewExerciseName(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleAddCustomExercise();
+                  }
+                }}
+                placeholder="e.g., Cable Chest Flyes"
+                autoFocus
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                This will be saved for future workouts
+              </p>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setShowAddExerciseModal(false);
+                  setNewExerciseName('');
+                }}
+                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAddCustomExercise}
+                className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition"
+              >
+                Add Exercise
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -11,11 +11,12 @@ A professional web-based workout tracking application for **Rest-Pause (Dog Crap
 - ✅ **Real-time Calculations**: Auto-calculate total reps and volume
 - ✅ **Workout History**: Complete chronological log of all sessions
 - ✅ **Progress Analytics**: Visual charts for strength and volume progression
-- ✅ **CSV Export**: Export data for backup and analysis
+- ✅ **CSV Export/Import**: Export data for backup and import workouts from CSV files (v1.1.2)
 - ✅ **Full Backup/Restore**: JSON backup for complete data preservation
 - ✅ **Last Workout Comparison**: See your previous performance instantly when selecting exercises (v1.1.0)
 - ✅ **Dark Mode Theme**: Full dark mode support with toggle switch (v1.1.1)
-- ✅ **Workout Templates**: Pre-defined workout plans (A1, A2, A3, B1, B2, B3) with exercise variations (v1.1.1)
+- ✅ **Workout Template Manager**: Create custom workout templates with drag-and-drop exercise selection (v1.1.2)
+- ✅ **Exercise Registry**: Centralized database of 30+ exercises organized by 10 muscle groups (v1.1.2)
 - ✅ **Comprehensive Testing**: Vitest integration with automated tests (v1.1.1)
 
 ### Training Plans
@@ -60,6 +61,28 @@ npm run dev
 
 # 4. Open browser to http://localhost:5174
 ```
+
+### 📁 Critical Files for Running the App
+
+The following files are essential for the app to function after cloning:
+
+**Configuration Files:**
+- `package.json` - Dependencies and scripts (already at v1.1.2)
+- `vite.config.js` - Vite build configuration
+- `tailwind.config.js` - Tailwind CSS styling
+- `postcss.config.js` - PostCSS configuration
+- `vitest.config.js` - Test configuration
+- `index.html` - HTML entry point
+
+**Source Files:**
+- `src/main.jsx` - Application entry point
+- `src/App.jsx` - Main app component with routing
+- `src/index.css` - Global styles and Tailwind imports
+- `src/components/*.jsx` - All React components (11 files)
+- `src/context/*.jsx` - State management contexts (AppContext, ThemeContext)
+- `src/utils/*.js` - Utility functions (storage, exerciseRegistry, workoutTemplates, etc.)
+
+All these files are included in the repository and will work immediately after running `npm install`.
 
 ### 📖 Complete Installation Instructions
 
@@ -107,24 +130,90 @@ For detailed installation guide including:
   - Strength progression charts
   - Exercise-specific analysis
 
+### Creating Custom Workout Templates (New in v1.1.2)
+
+1. Click **"Templates"** in the navigation
+2. Choose **"+ Create New Template"**
+3. Enter template name and description
+4. Select **Plan A** or **Plan B**
+5. Add exercises:
+   - Select muscle group from dropdown
+   - Choose exercise from centralized registry (30+ exercises)
+   - Set technique (Rest-Pause, Widowmakers, Straight Sets)
+   - Define target rep range
+   - Add exercise alternatives (optional)
+6. Click **"✓ Save Template"**
+7. Use your custom template when starting new workouts
+
+**Smart Features:**
+- Exercise dropdown prevents duplicate selections
+- 10 muscle groups: Chest, Shoulders, Triceps, Back Width, Back Thickness, Biceps, Forearms, Quads, Hamstrings, Calves
+- Add custom exercises to your personal library
+- Edit or delete saved templates anytime
+
+### Importing Workouts from CSV (New in v1.1.2)
+
+1. Go to **"Settings"** tab
+2. Scroll to **"Import from CSV"** section
+3. Click **"Choose File"** and select your CSV file
+4. Review the preview showing:
+   - Total workouts to import
+   - Date range
+   - Users included
+5. Choose import strategy:
+   - **Smart Merge** (Recommended): Skips duplicate workouts based on user, date, and plan
+   - **Merge All**: Imports everything without duplicate checking
+   - **Replace All**: Clears existing data and imports fresh
+6. Click **"Confirm Import"**
+7. Data is immediately available in History and Analytics
+
+**CSV Format Requirements:**
+- Must include columns: date, user_id, plan, muscle_group, exercise_name, weight_kg, reps
+- Date format: YYYY-MM-DD
+- Compatible with exported CSV files from the app
+
 ### Data Management
 
 - **Export CSV**: Download workout data for spreadsheets
+- **Import CSV**: Import workouts from CSV files with three merge strategies (v1.1.2)
 - **Create Backup**: Full JSON backup of all data
 - **Restore Backup**: Import previously exported JSON backup
 - **Storage Monitor**: Check LocalStorage usage
 
-### Workout Templates (New in v1.1.1) 📋
+### Workout Template Manager (New in v1.1.2) 📋
 
-Choose from 6 pre-defined workout templates:
+Create and manage custom workout templates with the new Templates tab:
+
+**Built-in Templates:**
 - **Plan A Variations** (Upper Body): A1 (Incline Focus), A2 (Flat Focus), A3 (Machine Focus)
 - **Plan B Variations** (Legs & Arms): B1 (Squat Focus), B2 (Leg Press Focus), B3 (Machine Focus)
 
-Each template includes:
-- Specific exercise selections for each muscle group
-- Recommended techniques (Rest-Pause, Widowmakers, Straight Sets)
-- Target rep ranges
-- Exercise alternatives
+**Custom Template Creation:**
+- Design your own workout plans with custom exercise selection
+- Choose from 30+ exercises organized by 10 muscle groups
+- Smart dropdown prevents duplicate exercise selection
+- Add exercise notes, techniques, and target rep ranges
+- Save templates for quick workout creation
+
+**Exercise Registry Features:**
+- Centralized database of all exercises
+- 10 muscle groups: Chest, Shoulders, Triceps, Back Width, Back Thickness, Biceps, Forearms, Quads, Hamstrings, Calves
+- 30+ pre-loaded exercises
+- Add custom exercises to your personal library
+- Exercise alternatives and technique recommendations
+
+### CSV Import Strategies (New in v1.1.2) 📊
+
+Import workouts from CSV files with intelligent merge options:
+1. **Smart Merge** (Recommended): Skip duplicate workouts based on user, date, and plan
+2. **Merge All**: Import all workouts without checking for duplicates
+3. **Replace All**: Clear existing data and import fresh dataset
+
+Preview imported data before confirming, including:
+- Total workout count
+- Date range coverage
+- Users included
+- Exercise breakdown
 
 ## 📊 Data Structure
 
@@ -174,14 +263,16 @@ dogcrap-tracker/
 │   │   ├── WorkoutDetail.jsx   # Individual workout view
 │   │   ├── Analytics.jsx    # Progress charts
 │   │   ├── Competition.jsx  # User comparison view
-│   │   ├── Settings.jsx     # Data management & theme toggle
+│   │   ├── Settings.jsx     # Data management, CSV import & theme toggle
+│   │   ├── WorkoutTemplateManager.jsx  # Custom template creation (v1.1.2)
 │   │   └── ThemeDebug.jsx   # Theme debugging component
 │   ├── context/
 │   │   ├── AppContext.jsx   # Global state management
 │   │   └── ThemeContext.jsx # Dark mode state management
 │   ├── utils/
-│   │   ├── storage.js       # LocalStorage operations
-│   │   ├── exercises.js     # Exercise database
+│   │   ├── storage.js       # LocalStorage operations & CSV import
+│   │   ├── exercises.js     # Exercise database (legacy)
+│   │   ├── exerciseRegistry.js  # Centralized exercise registry (v1.1.2)
 │   │   ├── calculations.js  # Analytics calculations
 │   │   ├── seedData.js      # Sample data generator
 │   │   └── workoutTemplates.js  # Pre-defined workout plans
@@ -293,6 +384,14 @@ export const EXERCISE_DATABASE = {
 
 ### ✅ Completed Features
 
+#### v1.1.2 (December 2024)
+- ✅ **Workout Template Manager** - New "Templates" tab for creating custom workout plans
+- ✅ **Exercise Registry** - Centralized database of 30+ exercises organized by 10 muscle groups
+- ✅ **CSV Import Feature** - Import workouts from CSV files with three merge strategies
+- ✅ **Smart Merge Strategy** - Skip duplicate workouts during CSV import
+- ✅ **Exercise Dropdown Enhancement** - Prevent duplicate exercise selection in templates
+- ✅ **Custom Exercise Support** - Add exercises to personal library from template manager
+
 #### v1.1.1 (December 2024)
 - ✅ **Dark mode theme** - Full dark mode support with persistent toggle
 - ✅ **Workout templates** - Pre-defined workout plans with 6 variations (A1-A3, B1-B3)
@@ -316,10 +415,10 @@ export const EXERCISE_DATABASE = {
 ### 🚧 Upcoming Features
 
 #### Phase 2 (Q1 2025)
-- [ ] Exercise notes/form tips
+- [ ] Exercise notes/form tips enhancements
 - [ ] Advanced analytics (1RM calculator, deload recommendations)
-- [ ] Custom exercise creation improvements
-- [ ] Workout templates
+- [ ] Template sharing between users
+- [ ] Workout plan scheduling
 
 #### Phase 3 (Q2 2025)
 - [ ] Progressive Web App (PWA)
@@ -349,12 +448,15 @@ Personal project - use as you wish!
 
 ## 💡 Tips for Best Results
 
-1. **Log workouts immediately** - don't wait until after the gym
-2. **Be accurate with weights** - use exact values (87.5kg not 87kg)
-3. **Track all mini-sets** - the magic is in the rest-pause details
-4. **Export weekly** - backup your hard-earned data
-5. **Review analytics monthly** - identify trends and plateaus
-6. **Use notes** - record how you felt, sleep quality, etc.
+1. **Create custom templates** - Design templates for your favorite workout variations (v1.1.2)
+2. **Use Smart Merge for CSV imports** - Prevents duplicate data when importing workouts (v1.1.2)
+3. **Log workouts immediately** - don't wait until after the gym
+4. **Be accurate with weights** - use exact values (87.5kg not 87kg)
+5. **Track all mini-sets** - the magic is in the rest-pause details
+6. **Export weekly** - backup your hard-earned data via CSV or JSON
+7. **Review analytics monthly** - identify trends and plateaus
+8. **Use notes** - record how you felt, sleep quality, etc.
+9. **Build exercise library** - Add your custom exercises to the centralized registry (v1.1.2)
 
 ## 🐛 Troubleshooting
 
@@ -419,4 +521,4 @@ npm run dev
 
 **Built with 💪 for serious training tracking**
 
-*Version 1.1.1 - December 2024*
+*Version 1.1.2 - December 2024*

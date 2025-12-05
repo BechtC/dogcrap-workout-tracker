@@ -306,7 +306,7 @@ const Settings = () => {
           <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">About</h3>
           <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
             <p>
-              <strong className="text-gray-800 dark:text-white">Dog Crap Workout Tracker</strong> v1.1.0
+              <strong className="text-gray-800 dark:text-white">Dog Crap Workout Tracker</strong> v1.1.1
             </p>
             <p>Rest-Pause Training Logger for Chris & Denis</p>
             <p className="pt-3 border-t border-gray-200 dark:border-gray-700">

@@ -14,8 +14,9 @@ A professional web-based workout tracking application for **Rest-Pause (Dog Crap
 - ✅ **CSV Export**: Export data for backup and analysis
 - ✅ **Full Backup/Restore**: JSON backup for complete data preservation
 - ✅ **Last Workout Comparison**: See your previous performance instantly when selecting exercises (v1.1.0)
-- ✅ **Dark Mode Theme**: Full dark mode support with toggle switch (v1.1.0)
-- ✅ **Workout Templates**: Pre-defined workout plans (A1, A2, A3, B1, B2, B3) with exercise variations (v1.1.0)
+- ✅ **Dark Mode Theme**: Full dark mode support with toggle switch (v1.1.1)
+- ✅ **Workout Templates**: Pre-defined workout plans (A1, A2, A3, B1, B2, B3) with exercise variations (v1.1.1)
+- ✅ **Comprehensive Testing**: Vitest integration with automated tests (v1.1.1)
 
 ### Training Plans
 
@@ -113,7 +114,7 @@ For detailed installation guide including:
 - **Restore Backup**: Import previously exported JSON backup
 - **Storage Monitor**: Check LocalStorage usage
 
-### Workout Templates (New in v1.1.0) 📋
+### Workout Templates (New in v1.1.1) 📋
 
 Choose from 6 pre-defined workout templates:
 - **Plan A Variations** (Upper Body): A1 (Incline Focus), A2 (Flat Focus), A3 (Machine Focus)
@@ -292,12 +293,16 @@ export const EXERCISE_DATABASE = {
 
 ### ✅ Completed Features
 
-#### v1.1.0 (December 2024)
-- ✅ **Last-workout comparison during session** - View previous performance when selecting exercises
+#### v1.1.1 (December 2024)
 - ✅ **Dark mode theme** - Full dark mode support with persistent toggle
 - ✅ **Workout templates** - Pre-defined workout plans with 6 variations (A1-A3, B1-B3)
 - ✅ **Comprehensive test suite** - Vitest integration with 13+ automated tests
 - ✅ **Enhanced exercise database** - Structured workout templates with technique guidance
+- ✅ **Theme debugging tools** - ThemeDebug component for development
+
+#### v1.1.0 (December 2024)
+- ✅ **Last-workout comparison during session** - View previous performance when selecting exercises
+- ✅ **Initial dark mode implementation** - Foundation for theme system
 
 #### v1.0.0 (December 2024)
 - ✅ Multi-user support (Chris & Denis)
@@ -414,4 +419,4 @@ npm run dev
 
 **Built with 💪 for serious training tracking**
 
-*Version 1.1.0 - December 2024*
+*Version 1.1.1 - December 2024*

@@ -264,26 +264,47 @@ export const WORKOUT_TEMPLATES = {
 };
 
 /**
- * Get template by ID
+ * Get custom templates from localStorage
  */
-export const getTemplate = (templateId) => {
-  return WORKOUT_TEMPLATES[templateId] || null;
+export const getCustomTemplates = () => {
+  const saved = localStorage.getItem('dogcrap_custom_templates');
+  return saved ? JSON.parse(saved) : {};
 };
 
 /**
- * Get all templates for a specific plan
+ * Get all templates (built-in + custom)
+ */
+export const getAllTemplates = () => {
+  return {
+    ...WORKOUT_TEMPLATES,
+    ...getCustomTemplates()
+  };
+};
+
+/**
+ * Get template by ID (checks both built-in and custom)
+ */
+export const getTemplate = (templateId) => {
+  const allTemplates = getAllTemplates();
+  return allTemplates[templateId] || null;
+};
+
+/**
+ * Get all templates for a specific plan (includes custom templates)
  */
 export const getTemplatesForPlan = (plan) => {
-  return Object.entries(WORKOUT_TEMPLATES)
+  const allTemplates = getAllTemplates();
+  return Object.entries(allTemplates)
     .filter(([id, template]) => template.plan === plan)
     .map(([id, template]) => ({ id, ...template }));
 };
 
 /**
- * Get all template IDs
+ * Get all template IDs (includes custom templates)
  */
 export const getAllTemplateIds = () => {
-  return Object.keys(WORKOUT_TEMPLATES);
+  const allTemplates = getAllTemplates();
+  return Object.keys(allTemplates);
 };
 
 /**

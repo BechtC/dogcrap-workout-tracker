@@ -5,6 +5,8 @@ import {
   downloadCSV,
   exportBackup,
   importBackup,
+  importFromCSV,
+  parseCSV,
   getStorageSize,
   isStorageNearLimit
 } from '../utils/storage';
@@ -15,6 +17,9 @@ const Settings = () => {
   const { isDarkMode, toggleTheme } = useTheme();
   const [importStatus, setImportStatus] = useState('');
   const [seedStatus, setSeedStatus] = useState('');
+  const [csvImportStatus, setCsvImportStatus] = useState('');
+  const [csvPreview, setCsvPreview] = useState(null);
+  const [csvStrategy, setCsvStrategy] = useState('smart');
 
   const storageSize = getStorageSize();
   const nearLimit = isStorageNearLimit();
@@ -54,6 +59,64 @@ const Settings = () => {
       }
     };
     reader.readAsText(file);
+  };
+
+  const handleCSVFileSelect = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const result = event.target?.result;
+      if (typeof result === 'string') {
+        try {
+          const workouts = parseCSV(result);
+          setCsvPreview({
+            csvContent: result,
+            workouts,
+            stats: {
+              totalWorkouts: workouts.length,
+              users: [...new Set(workouts.map(w => w.user_id))],
+              dateRange: {
+                start: workouts.reduce((min, w) => w.date < min ? w.date : min, workouts[0]?.date || ''),
+                end: workouts.reduce((max, w) => w.date > max ? w.date : max, workouts[0]?.date || '')
+              }
+            }
+          });
+          setCsvImportStatus('preview');
+        } catch (error) {
+          setCsvImportStatus('error');
+          alert(`Error parsing CSV: ${error.message}`);
+        }
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const handleConfirmCSVImport = () => {
+    if (!csvPreview) return;
+
+    const result = importFromCSV(csvPreview.csvContent, csvStrategy);
+
+    if (result.success) {
+      setCsvImportStatus('success');
+      alert(
+        `CSV imported successfully!\n\n` +
+        `Imported: ${result.imported} workouts\n` +
+        `Skipped: ${result.skipped} workouts\n` +
+        `Total in file: ${result.total} workouts\n\n` +
+        `The page will now reload.`
+      );
+      setTimeout(() => window.location.reload(), 1000);
+    } else {
+      setCsvImportStatus('error');
+      alert(`Error importing CSV: ${result.error}`);
+    }
+  };
+
+  const handleCancelCSVImport = () => {
+    setCsvPreview(null);
+    setCsvImportStatus('');
   };
 
   const handleLoadSeedData = () => {
@@ -198,6 +261,91 @@ const Settings = () => {
           </div>
         </div>
 
+        {/* Import from CSV */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-200">
+          <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Import from CSV</h3>
+
+          {!csvPreview ? (
+            <>
+              <div className="mb-4">
+                <label className="block w-full cursor-pointer">
+                  <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center hover:border-green-500 dark:hover:border-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 transition">
+                    <div className="text-4xl mb-2">📊</div>
+                    <div className="font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Click to select CSV file
+                    </div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                      Upload a CSV file to import workouts
+                    </div>
+                  </div>
+                  <input
+                    type="file"
+                    accept=".csv"
+                    onChange={handleCSVFileSelect}
+                    className="hidden"
+                  />
+                </label>
+              </div>
+
+              <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg text-sm text-green-700 dark:text-green-400">
+                <strong>CSV Format:</strong> Use the same format as exported CSV files (Date, User, Plan, Muscle Group, Exercise, Set Number, Weight, Reps, Notes)
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                <h4 className="font-semibold text-gray-800 dark:text-white mb-2">Import Preview</h4>
+                <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                  <div>📋 <strong>Total Workouts:</strong> {csvPreview.stats.totalWorkouts}</div>
+                  <div>👥 <strong>Users:</strong> {csvPreview.stats.users.join(', ')}</div>
+                  <div>📅 <strong>Date Range:</strong> {csvPreview.stats.dateRange.start} to {csvPreview.stats.dateRange.end}</div>
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Import Strategy
+                </label>
+                <select
+                  value={csvStrategy}
+                  onChange={(e) => setCsvStrategy(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:text-white"
+                >
+                  <option value="smart">Smart Merge (Skip Duplicates)</option>
+                  <option value="merge">Merge All (Keep Existing + Add New)</option>
+                  <option value="replace">Replace All (Delete Existing)</option>
+                </select>
+                <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                  {csvStrategy === 'smart' && '✅ Recommended: Skips workouts with same date, user, and plan'}
+                  {csvStrategy === 'merge' && '⚠️ Adds all workouts without checking for duplicates'}
+                  {csvStrategy === 'replace' && '⚠️ WARNING: Deletes all existing workouts!'}
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={handleConfirmCSVImport}
+                  className="flex-1 bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700 transition"
+                >
+                  ✅ Confirm Import
+                </button>
+                <button
+                  onClick={handleCancelCSVImport}
+                  className="flex-1 bg-gray-500 text-white py-3 rounded-lg font-medium hover:bg-gray-600 transition"
+                >
+                  Cancel
+                </button>
+              </div>
+            </>
+          )}
+
+          {csvImportStatus === 'error' && (
+            <div className="mt-3 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-lg text-sm">
+              ✗ Error importing CSV. Please check the file format.
+            </div>
+          )}
+        </div>
+
         {/* Demo Data (Testing) */}
         <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-2 border-purple-200 dark:border-purple-700 rounded-lg p-6 transition-colors duration-200">
           <h3 className="text-xl font-bold text-purple-800 dark:text-purple-300 mb-4">🎲 Demo Data for Testing</h3>
@@ -306,7 +454,7 @@ const Settings = () => {
           <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">About</h3>
           <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
             <p>
-              <strong className="text-gray-800 dark:text-white">Dog Crap Workout Tracker</strong> v1.1.1
+              <strong className="text-gray-800 dark:text-white">Dog Crap Workout Tracker</strong> v1.1.2
             </p>
             <p>Rest-Pause Training Logger for Chris & Denis</p>
             <p className="pt-3 border-t border-gray-200 dark:border-gray-700">

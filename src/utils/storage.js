@@ -274,3 +274,164 @@ export const getLastExerciseData = (userId, exerciseName) => {
 
   return null;
 };
+
+/**
+ * Parse CSV string and convert to workout objects
+ * CSV format: Date,User,Plan,Muscle Group,Exercise,Set Number,Weight (kg),Reps,Notes
+ */
+export const parseCSV = (csvString) => {
+  try {
+    const lines = csvString.trim().split('\n');
+
+    if (lines.length < 2) {
+      throw new Error('CSV file is empty or invalid');
+    }
+
+    // Skip header row
+    const dataLines = lines.slice(1);
+
+    // Group rows by workout (date + user + plan)
+    const workoutMap = new Map();
+
+    dataLines.forEach((line, index) => {
+      // Handle quoted fields with commas
+      const regex = /("(?:[^"]|"")*"|[^,]+)(?=\s*,|\s*$)/g;
+      const fields = [];
+      let match;
+
+      while ((match = regex.exec(line)) !== null) {
+        let field = match[1];
+        // Remove surrounding quotes and unescape double quotes
+        if (field.startsWith('"') && field.endsWith('"')) {
+          field = field.slice(1, -1).replace(/""/g, '"');
+        }
+        fields.push(field.trim());
+      }
+
+      if (fields.length < 9) {
+        console.warn(`Skipping malformed line ${index + 2}: ${line}`);
+        return;
+      }
+
+      const [date, user, plan, muscleGroup, exercise, setNumber, weightKg, reps, notes] = fields;
+
+      // Create workout key
+      const workoutKey = `${date}|${user}|${plan}`;
+
+      if (!workoutMap.has(workoutKey)) {
+        workoutMap.set(workoutKey, {
+          date,
+          user_id: user.toLowerCase(),
+          plan,
+          exercises: [],
+          notes: notes || ''
+        });
+      }
+
+      const workout = workoutMap.get(workoutKey);
+
+      // Find or create exercise
+      let exerciseObj = workout.exercises.find(
+        e => e.muscle_group === muscleGroup && e.exercise_name === exercise
+      );
+
+      if (!exerciseObj) {
+        exerciseObj = {
+          muscle_group: muscleGroup,
+          exercise_name: exercise,
+          sets: []
+        };
+        workout.exercises.push(exerciseObj);
+      }
+
+      // Add set
+      exerciseObj.sets.push({
+        set_number: parseInt(setNumber) || 1,
+        weight_kg: parseFloat(weightKg) || 0,
+        reps: parseInt(reps) || 0
+      });
+    });
+
+    return Array.from(workoutMap.values());
+  } catch (error) {
+    console.error('Error parsing CSV:', error);
+    throw new Error(`CSV parsing failed: ${error.message}`);
+  }
+};
+
+/**
+ * Import workouts from CSV
+ * @param {string} csvString - CSV content
+ * @param {string} strategy - 'replace', 'merge', or 'smart'
+ * @returns {object} - Import statistics
+ */
+export const importFromCSV = (csvString, strategy = 'merge') => {
+  try {
+    const parsedWorkouts = parseCSV(csvString);
+
+    if (parsedWorkouts.length === 0) {
+      throw new Error('No valid workouts found in CSV');
+    }
+
+    const data = loadData();
+    let imported = 0;
+    let skipped = 0;
+    let replaced = 0;
+
+    if (strategy === 'replace') {
+      // Replace all workouts
+      data.workouts = parsedWorkouts.map(w => ({
+        id: generateUUID(),
+        created_at: new Date().toISOString(),
+        ...w
+      }));
+      imported = parsedWorkouts.length;
+    } else if (strategy === 'merge') {
+      // Add all workouts without checking duplicates
+      parsedWorkouts.forEach(workout => {
+        data.workouts.push({
+          id: generateUUID(),
+          created_at: new Date().toISOString(),
+          ...workout
+        });
+        imported++;
+      });
+    } else if (strategy === 'smart') {
+      // Smart merge: avoid duplicates based on date, user, and plan
+      parsedWorkouts.forEach(workout => {
+        const exists = data.workouts.some(
+          w => w.date === workout.date &&
+               w.user_id === workout.user_id &&
+               w.plan === workout.plan
+        );
+
+        if (exists) {
+          skipped++;
+        } else {
+          data.workouts.push({
+            id: generateUUID(),
+            created_at: new Date().toISOString(),
+            ...workout
+          });
+          imported++;
+        }
+      });
+    }
+
+    saveData(data);
+
+    return {
+      success: true,
+      imported,
+      skipped,
+      replaced: strategy === 'replace' ? imported : 0,
+      total: parsedWorkouts.length
+    };
+  } catch (error) {
+    console.error('Error importing CSV:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+};

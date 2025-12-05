@@ -97,6 +97,16 @@ const Header = () => {
             Competition
           </button>
           <button
+            onClick={() => setView('templates')}
+            className={`px-4 py-2 rounded-md font-medium transition-all ${
+              view === 'templates'
+                ? 'bg-white text-blue-700'
+                : 'text-white hover:bg-white/20'
+            }`}
+          >
+            Templates
+          </button>
+          <button
             onClick={() => setView('settings')}
             className={`px-4 py-2 rounded-md font-medium transition-all ${
               view === 'settings'

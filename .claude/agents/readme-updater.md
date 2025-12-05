@@ -49,14 +49,52 @@ Update when needed:
 
 ## Workflow - Execute in Order
 
-### Step 1: Analyze Changes
+### Step 1: Validate Critical Files (NEW)
+**ALWAYS do this first - before any README updates**
+
+Check that all critical files exist locally AND on GitHub:
+
+```bash
+# 1. Check local files
+ls src/context/ThemeContext.jsx
+ls src/utils/workoutTemplates.js
+ls vitest.config.js
+ls src/tests/setup.js
+ls src/components/ThemeDebug.jsx
+
+# 2. Compare with GitHub (if git repo)
+git fetch origin master
+git diff --name-status origin/master HEAD
+
+# 3. Look for untracked files that should be committed
+git status --short
+```
+
+**Critical Files Checklist**:
+- ✅ `src/context/ThemeContext.jsx` - Dark mode (v1.1.1)
+- ✅ `src/utils/workoutTemplates.js` - Workout templates (v1.1.1)
+- ✅ `vitest.config.js` - Test configuration
+- ✅ `src/tests/setup.js` - Test setup
+- ✅ `src/components/ThemeDebug.jsx` - Theme debugging
+- ✅ `src/context/AppContext.jsx` - App state
+- ✅ All component files in `src/components/`
+- ✅ All utility files in `src/utils/`
+
+**If ANY critical file is missing**:
+1. 🚨 **STOP immediately**
+2. Report: "❌ Critical file missing: [filename]"
+3. List: What's missing locally vs GitHub
+4. Recommend: "Run file comparison check before updating README"
+5. **DO NOT update README until files are synced**
+
+### Step 2: Analyze Changes
 ```bash
 git status
 git diff
 ```
 Identify: What changed? What version? Which features?
 
-### Step 2: Read Current State
+### Step 3: Read Current State
 ```bash
 # Read current README
 Read README.md
@@ -155,9 +193,98 @@ Your updates:
 4. List all completed roadmap items
 ```
 
+## File Sync Helper (NEW)
+
+### Automated File Validation Script
+
+Use this to check for missing files:
+
+```bash
+# Create array of critical files
+CRITICAL_FILES=(
+  "src/context/ThemeContext.jsx"
+  "src/context/AppContext.jsx"
+  "src/utils/workoutTemplates.js"
+  "src/utils/exercises.js"
+  "src/utils/calculations.js"
+  "src/utils/storage.js"
+  "src/utils/seedData.js"
+  "vitest.config.js"
+  "src/tests/setup.js"
+  "tailwind.config.js"
+  "postcss.config.js"
+)
+
+# Check each file
+for file in "${CRITICAL_FILES[@]}"; do
+  if [ ! -f "$file" ]; then
+    echo "❌ Missing: $file"
+  fi
+done
+
+# Check components
+for component in src/components/*.jsx; do
+  if [ -f "$component" ]; then
+    basename "$component"
+  fi
+done
+```
+
+### GitHub Comparison Commands
+
+**Check what's on GitHub but not locally**:
+```bash
+git fetch origin master
+git diff --name-only origin/master HEAD
+```
+
+**Check what's local but not on GitHub**:
+```bash
+git status --porcelain | grep "^??" | cut -c4-
+```
+
+**Find files that should be committed**:
+```bash
+git status --short
+# Look for:
+# ?? = untracked (might need to add)
+# M  = modified (needs commit)
+# A  = added (needs commit)
+```
+
+### Missing File Resolution
+
+**If critical files are missing from GitHub**:
+```bash
+# 1. List all missing files
+git status
+
+# 2. Add them
+git add src/context/ThemeContext.jsx
+git add src/utils/workoutTemplates.js
+git add vitest.config.js
+# ... add all missing files
+
+# 3. Commit with clear message
+git commit -m "Add missing critical files for v[VERSION]
+
+Files added:
+- src/context/ThemeContext.jsx (dark mode)
+- src/utils/workoutTemplates.js (templates)
+- vitest.config.js (testing)
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>"
+
+# 4. Push
+git push origin master
+```
+
 ## Quality Checklist
 
 Before committing, verify:
+- ✅ **ALL critical files present** locally and on GitHub
 - ✅ package.json version === README footer version
 - ✅ All new features documented in Core Functionality
 - ✅ Roadmap items moved from future → completed
@@ -166,24 +293,30 @@ Before committing, verify:
 - ✅ No broken links or references
 - ✅ Consistent emoji usage
 - ✅ Proper markdown formatting
+- ✅ **Project structure section matches actual files**
 
 ## Critical Rules - NEVER Break These
 
 **DO**:
+- ✅ **Always validate critical files FIRST** (Step 1)
 - ✅ Always read README.md before editing
 - ✅ Always check package.json version
+- ✅ **Always compare local files with GitHub**
 - ✅ Always update roadmap checkboxes
 - ✅ Always use detailed commit messages
 - ✅ Always maintain existing formatting style
 - ✅ Always verify version consistency
+- ✅ **Stop and warn if files are missing**
 
 **DON'T**:
+- ❌ **Update README if critical files are missing**
 - ❌ Remove completed features from documentation
 - ❌ Change versions without checking package.json
 - ❌ Document features that aren't implemented
 - ❌ Use vague commit messages
 - ❌ Skip roadmap updates
 - ❌ Forget to push after committing
+- ❌ **Assume all files are on GitHub without checking**
 
 ## Output Format
 
@@ -191,6 +324,14 @@ Before committing, verify:
 ```
 📝 README Update Analysis
 ========================
+Step 1: File Validation
+  ✅ All critical files present locally
+  ✅ Local and GitHub in sync
+  OR
+  ❌ Missing files detected: [list]
+  🚨 STOPPING - Files must be synced first
+
+Step 2: Change Analysis
 Changes: [brief summary]
 Current Version: v[X.Y.Z]
 Updates Needed:
@@ -198,7 +339,7 @@ Updates Needed:
   • Roadmap: [items to move]
   • Version: [version update]
 
-Proceeding...
+Proceeding with README updates...
 ```
 
 **When finished, report**:

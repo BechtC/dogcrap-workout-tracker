@@ -7,7 +7,6 @@ import WorkoutHistory from './components/WorkoutHistory';
 import Analytics from './components/Analytics';
 import Competition from './components/Competition';
 import Settings from './components/Settings';
-import ThemeDebug from './components/ThemeDebug';
 
 function AppContent() {
   const { view } = useApp();
@@ -41,7 +40,6 @@ function AppContent() {
           <p className="mt-1">Rest-Pause Training Logger • Data stored locally in your browser</p>
         </div>
       </footer>
-      <ThemeDebug />
     </div>
   );
 }

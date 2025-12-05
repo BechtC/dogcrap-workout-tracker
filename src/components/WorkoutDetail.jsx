@@ -21,7 +21,7 @@ const WorkoutDetail = ({ workout, onBack }) => {
         ← Back to History
       </button>
 
-      <div className="bg-white rounded-lg shadow-lg p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
         {/* Header */}
         <div className="flex items-start justify-between mb-6">
           <div>
@@ -35,7 +35,7 @@ const WorkoutDetail = ({ workout, onBack }) => {
                 <h2 className="text-3xl font-bold text-gray-800">
                   Plan {workout.plan} Workout
                 </h2>
-                <p className="text-gray-600">{formatDate(workout.date)}</p>
+                <p className="text-gray-600 dark:text-gray-400">{formatDate(workout.date)}</p>
               </div>
             </div>
           </div>
@@ -51,21 +51,21 @@ const WorkoutDetail = ({ workout, onBack }) => {
         <div className="grid grid-cols-4 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
           <div className="text-center">
             <div className="text-2xl font-bold text-gray-800">{stats.exerciseCount}</div>
-            <div className="text-xs text-gray-600">Exercises</div>
+            <div className="text-xs text-gray-600 dark:text-gray-400">Exercises</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-gray-800">{stats.totalSets}</div>
-            <div className="text-xs text-gray-600">Total Sets</div>
+            <div className="text-xs text-gray-600 dark:text-gray-400">Total Sets</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-gray-800">{stats.totalReps}</div>
-            <div className="text-xs text-gray-600">Total Reps</div>
+            <div className="text-xs text-gray-600 dark:text-gray-400">Total Reps</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-gray-800">
               {stats.totalVolume.toLocaleString()}
             </div>
-            <div className="text-xs text-gray-600">Volume (kg)</div>
+            <div className="text-xs text-gray-600 dark:text-gray-400">Volume (kg)</div>
           </div>
         </div>
 
@@ -79,26 +79,26 @@ const WorkoutDetail = ({ workout, onBack }) => {
 
         {/* Exercises */}
         <div>
-          <h3 className="text-xl font-bold text-gray-800 mb-4">Exercises</h3>
+          <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Exercises</h3>
 
           {workout.exercises && workout.exercises.length > 0 ? (
             <div className="space-y-4">
               {workout.exercises.map((exercise, idx) => (
                 <div
                   key={exercise.id}
-                  className="border border-gray-200 rounded-lg p-5"
+                  className="border border-gray-200 dark:border-gray-700 rounded-lg p-5"
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div>
                       <div className="font-semibold text-lg text-gray-800">
                         {idx + 1}. {exercise.exercise_name}
                       </div>
-                      <div className="text-sm text-gray-600">
+                      <div className="text-sm text-gray-600 dark:text-gray-400">
                         {exercise.muscle_group}
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-sm text-gray-600">Total Reps</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">Total Reps</div>
                       <div className="text-lg font-bold text-blue-600">
                         {calculateTotalReps(exercise.sets)}
                       </div>
@@ -109,7 +109,7 @@ const WorkoutDetail = ({ workout, onBack }) => {
                   <div className="overflow-x-auto">
                     <table className="w-full">
                       <thead>
-                        <tr className="bg-gray-50 text-left text-xs text-gray-600">
+                        <tr className="bg-gray-50 text-left text-xs text-gray-600 dark:text-gray-400">
                           <th className="px-3 py-2 rounded-tl">Mini-Set</th>
                           <th className="px-3 py-2">Weight (kg)</th>
                           <th className="px-3 py-2">Reps</th>

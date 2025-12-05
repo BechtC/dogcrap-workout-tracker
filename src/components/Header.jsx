@@ -4,7 +4,7 @@ const Header = () => {
   const { currentUser, switchUser, setView, view } = useApp();
 
   return (
-    <header className="bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-lg">
+    <header className="bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-800 dark:to-gray-900 text-white shadow-lg transition-colors duration-200">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between flex-wrap gap-4">
           {/* Logo and Title */}

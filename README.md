@@ -15,6 +15,7 @@ A professional web-based workout tracking application for **Rest-Pause (Dog Crap
 - ✅ **Full Backup/Restore**: JSON backup for complete data preservation
 - ✅ **Last Workout Comparison**: See your previous performance instantly when selecting exercises (v1.1.0)
 - ✅ **Dark Mode Theme**: Full dark mode support with toggle switch (v1.1.0)
+- ✅ **Workout Templates**: Pre-defined workout plans (A1, A2, A3, B1, B2, B3) with exercise variations (v1.1.0)
 
 ### Training Plans
 
@@ -112,6 +113,18 @@ For detailed installation guide including:
 - **Restore Backup**: Import previously exported JSON backup
 - **Storage Monitor**: Check LocalStorage usage
 
+### Workout Templates (New in v1.1.0) 📋
+
+Choose from 6 pre-defined workout templates:
+- **Plan A Variations** (Upper Body): A1 (Incline Focus), A2 (Flat Focus), A3 (Machine Focus)
+- **Plan B Variations** (Legs & Arms): B1 (Squat Focus), B2 (Leg Press Focus), B3 (Machine Focus)
+
+Each template includes:
+- Specific exercise selections for each muscle group
+- Recommended techniques (Rest-Pause, Widowmakers, Straight Sets)
+- Target rep ranges
+- Exercise alternatives
+
 ## 📊 Data Structure
 
 ### LocalStorage Schema
@@ -159,13 +172,20 @@ dogcrap-tracker/
 │   │   ├── WorkoutHistory.jsx  # Historical workouts
 │   │   ├── WorkoutDetail.jsx   # Individual workout view
 │   │   ├── Analytics.jsx    # Progress charts
-│   │   └── Settings.jsx     # Data management
+│   │   ├── Competition.jsx  # User comparison view
+│   │   ├── Settings.jsx     # Data management & theme toggle
+│   │   └── ThemeDebug.jsx   # Theme debugging component
 │   ├── context/
-│   │   └── AppContext.jsx   # Global state management
+│   │   ├── AppContext.jsx   # Global state management
+│   │   └── ThemeContext.jsx # Dark mode state management
 │   ├── utils/
 │   │   ├── storage.js       # LocalStorage operations
 │   │   ├── exercises.js     # Exercise database
-│   │   └── calculations.js  # Analytics calculations
+│   │   ├── calculations.js  # Analytics calculations
+│   │   ├── seedData.js      # Sample data generator
+│   │   └── workoutTemplates.js  # Pre-defined workout plans
+│   ├── tests/
+│   │   └── setup.js         # Test environment setup
 │   ├── App.jsx              # Main app component
 │   ├── main.jsx             # Entry point
 │   └── index.css            # Tailwind imports
@@ -173,7 +193,8 @@ dogcrap-tracker/
 ├── index.html
 ├── package.json
 ├── tailwind.config.js
-└── vite.config.js
+├── vite.config.js
+└── vitest.config.js         # Test configuration
 ```
 
 ## 🎨 Key Features Explained
@@ -274,6 +295,9 @@ export const EXERCISE_DATABASE = {
 #### v1.1.0 (December 2024)
 - ✅ **Last-workout comparison during session** - View previous performance when selecting exercises
 - ✅ **Dark mode theme** - Full dark mode support with persistent toggle
+- ✅ **Workout templates** - Pre-defined workout plans with 6 variations (A1-A3, B1-B3)
+- ✅ **Comprehensive test suite** - Vitest integration with 13+ automated tests
+- ✅ **Enhanced exercise database** - Structured workout templates with technique guidance
 
 #### v1.0.0 (December 2024)
 - ✅ Multi-user support (Chris & Denis)

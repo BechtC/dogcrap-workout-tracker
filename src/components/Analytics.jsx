@@ -47,12 +47,12 @@ const Analytics = () => {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <h2 className="text-3xl font-bold text-gray-800 mb-6">Analytics & Progress</h2>
+      <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-6">Analytics & Progress</h2>
 
       {workouts.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-md p-12 text-center">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 text-center">
           <div className="text-6xl mb-4">📊</div>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             No workout data yet. Start tracking to see your progress!
           </p>
         </div>
@@ -60,34 +60,34 @@ const Analytics = () => {
         <div className="space-y-6">
           {/* Personal Records */}
           {Object.keys(personalRecords).length > 0 && (
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
                 🏆 Personal Records
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto">
                 {Object.entries(personalRecords).map(([exercise, records]) => (
                   <div
                     key={exercise}
-                    className="border border-gray-200 rounded-lg p-4"
+                    className="border border-gray-200 dark:border-gray-700 rounded-lg p-4"
                   >
-                    <div className="font-semibold text-gray-800 mb-2">
+                    <div className="font-semibold text-gray-800 dark:text-white mb-2">
                       {exercise}
                     </div>
                     <div className="space-y-1 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Max Weight:</span>
+                        <span className="text-gray-600 dark:text-gray-400">Max Weight:</span>
                         <span className="font-medium">
                           {records.maxWeight.value} kg
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Max Reps:</span>
+                        <span className="text-gray-600 dark:text-gray-400">Max Reps:</span>
                         <span className="font-medium">
                           {records.maxReps.value}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Max Volume:</span>
+                        <span className="text-gray-600 dark:text-gray-400">Max Volume:</span>
                         <span className="font-medium">
                           {Math.round(records.maxVolume.value)} kg
                         </span>
@@ -100,8 +100,8 @@ const Analytics = () => {
           )}
 
           {/* Volume Progression */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
               Volume Progression Over Time
             </h3>
             <ResponsiveContainer width="100%" height={300}>
@@ -118,8 +118,8 @@ const Analytics = () => {
           </div>
 
           {/* Strength Progression */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
               Strength Progression by Exercise
             </h3>
 
@@ -192,8 +192,8 @@ const Analytics = () => {
 
           {/* Volume by Exercise Chart */}
           {selectedExercise && exerciseProgressionData.length > 0 && (
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
                 {selectedExercise} - Volume Over Time
               </h3>
               <ResponsiveContainer width="100%" height={300}>

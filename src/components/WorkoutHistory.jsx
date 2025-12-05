@@ -28,7 +28,7 @@ const WorkoutHistory = () => {
   return (
     <div className="container mx-auto px-4 py-6">
       <div className="mb-6">
-        <h2 className="text-3xl font-bold text-gray-800 mb-4">Workout History</h2>
+        <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-4">Workout History</h2>
 
         {/* Filters */}
         <div className="flex gap-2">
@@ -67,9 +67,9 @@ const WorkoutHistory = () => {
 
       {/* Workouts List */}
       {filteredWorkouts.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-md p-12 text-center">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 text-center">
           <div className="text-6xl mb-4">📋</div>
-          <p className="text-gray-600 mb-4">No workouts found</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">No workouts found</p>
           <button
             onClick={() => setView('new-workout')}
             className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
@@ -85,7 +85,7 @@ const WorkoutHistory = () => {
               <div
                 key={workout.id}
                 onClick={() => handleViewDetails(workout)}
-                className="bg-white rounded-lg shadow-md p-5 cursor-pointer hover:shadow-lg transition border-l-4"
+                className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-5 cursor-pointer hover:shadow-lg transition border-l-4"
                 style={{
                   borderLeftColor: workout.plan === 'A' ? '#3b82f6' : '#22c55e'
                 }}
@@ -97,42 +97,42 @@ const WorkoutHistory = () => {
                     {workout.plan}
                   </div>
                   <div className="text-right">
-                    <div className="text-sm text-gray-600">Volume</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">Volume</div>
                     <div className="font-bold text-gray-800">
                       {stats.totalVolume.toLocaleString()} kg
                     </div>
                   </div>
                 </div>
 
-                <div className="font-semibold text-gray-800 mb-1">
+                <div className="font-semibold text-gray-800 dark:text-white mb-1">
                   {formatDate(workout.date)}
                 </div>
 
                 <div className="grid grid-cols-3 gap-2 mb-3 text-sm">
                   <div>
-                    <div className="text-gray-600">Exercises</div>
+                    <div className="text-gray-600 dark:text-gray-400">Exercises</div>
                     <div className="font-semibold">{stats.exerciseCount}</div>
                   </div>
                   <div>
-                    <div className="text-gray-600">Sets</div>
+                    <div className="text-gray-600 dark:text-gray-400">Sets</div>
                     <div className="font-semibold">{stats.totalSets}</div>
                   </div>
                   <div>
-                    <div className="text-gray-600">Reps</div>
+                    <div className="text-gray-600 dark:text-gray-400">Reps</div>
                     <div className="font-semibold">{stats.totalReps}</div>
                   </div>
                 </div>
 
                 {workout.notes && (
-                  <div className="text-xs text-gray-600 bg-gray-50 p-2 rounded">
+                  <div className="text-xs text-gray-600 dark:text-gray-400 bg-gray-50 p-2 rounded">
                     "{workout.notes.substring(0, 60)}
                     {workout.notes.length > 60 ? '...' : ''}"
                   </div>
                 )}
 
                 {workout.exercises && workout.exercises.length > 0 && (
-                  <div className="mt-3 pt-3 border-t border-gray-200">
-                    <div className="text-xs text-gray-600 mb-1">Exercises:</div>
+                  <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+                    <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">Exercises:</div>
                     <div className="flex flex-wrap gap-1">
                       {workout.exercises.slice(0, 3).map((ex, idx) => (
                         <span

@@ -24,44 +24,44 @@ const Dashboard = () => {
   return (
     <div className="container mx-auto px-4 py-6">
       <div className="mb-6">
-        <h2 className="text-3xl font-bold text-gray-800 mb-2">
+        <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
           Welcome back, {currentUser === 'chris' ? 'Chris' : 'Denis'}!
         </h2>
-        <p className="text-gray-600">Track your Dog Crap training progress</p>
+        <p className="text-gray-600 dark:text-gray-400">Track your Dog Crap training progress</p>
       </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
-          <div className="text-sm text-gray-600 font-medium">Total Workouts</div>
-          <div className="text-3xl font-bold text-gray-800 mt-2">{totalWorkouts}</div>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-blue-500 transition-colors duration-200">
+          <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">Total Workouts</div>
+          <div className="text-3xl font-bold text-gray-800 dark:text-white mt-2">{totalWorkouts}</div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500">
-          <div className="text-sm text-gray-600 font-medium">Plan A Sessions</div>
-          <div className="text-3xl font-bold text-gray-800 mt-2">{planACount}</div>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-green-500 transition-colors duration-200">
+          <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">Plan A Sessions</div>
+          <div className="text-3xl font-bold text-gray-800 dark:text-white mt-2">{planACount}</div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-purple-500">
-          <div className="text-sm text-gray-600 font-medium">Plan B Sessions</div>
-          <div className="text-3xl font-bold text-gray-800 mt-2">{planBCount}</div>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-purple-500 transition-colors duration-200">
+          <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">Plan B Sessions</div>
+          <div className="text-3xl font-bold text-gray-800 dark:text-white mt-2">{planBCount}</div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-orange-500">
-          <div className="text-sm text-gray-600 font-medium">Total Volume (kg)</div>
-          <div className="text-3xl font-bold text-gray-800 mt-2">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-orange-500 transition-colors duration-200">
+          <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">Total Volume (kg)</div>
+          <div className="text-3xl font-bold text-gray-800 dark:text-white mt-2">
             {totalVolume.toLocaleString()}
           </div>
         </div>
       </div>
 
       {/* Recent Workouts */}
-      <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-200">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-xl font-bold text-gray-800">Recent Workouts</h3>
+          <h3 className="text-xl font-bold text-gray-800 dark:text-white">Recent Workouts</h3>
           <button
             onClick={() => setView('history')}
-            className="text-blue-600 hover:text-blue-800 font-medium text-sm"
+            className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium text-sm"
           >
             View All →
           </button>
@@ -70,7 +70,7 @@ const Dashboard = () => {
         {recentWorkouts.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-6xl mb-4">🏋️</div>
-            <p className="text-gray-600 mb-4">No workouts yet!</p>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">No workouts yet!</p>
             <button
               onClick={() => setView('new-workout')}
               className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition"
@@ -86,7 +86,7 @@ const Dashboard = () => {
                 <div
                   key={workout.id}
                   onClick={() => handleViewWorkout(workout)}
-                  className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition"
+                  className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition"
                 >
                   <div className="flex items-center gap-4">
                     <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-white ${
@@ -95,17 +95,17 @@ const Dashboard = () => {
                       {workout.plan}
                     </div>
                     <div>
-                      <div className="font-semibold text-gray-800">
+                      <div className="font-semibold text-gray-800 dark:text-white">
                         Plan {workout.plan} - {formatDate(workout.date)}
                       </div>
-                      <div className="text-sm text-gray-600">
+                      <div className="text-sm text-gray-600 dark:text-gray-400">
                         {stats.exerciseCount} exercises • {stats.totalSets} sets • {stats.totalReps} reps
                       </div>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-sm text-gray-600">Volume</div>
-                    <div className="font-bold text-gray-800">
+                    <div className="text-sm text-gray-600 dark:text-gray-400">Volume</div>
+                    <div className="font-bold text-gray-800 dark:text-white">
                       {stats.totalVolume.toLocaleString()} kg
                     </div>
                   </div>

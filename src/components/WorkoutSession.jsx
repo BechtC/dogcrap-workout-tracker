@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { getMusclesForPlan, getExercisesForMuscleWithCustom, addCustomExercise } from '../utils/exercises';
 import { calculateTotalReps, getWorkoutStats } from '../utils/calculations';
+import { getTemplate } from '../utils/workoutTemplates';
 
 const WorkoutSession = () => {
   const {
@@ -30,8 +31,10 @@ const WorkoutSession = () => {
   const [showAddExerciseModal, setShowAddExerciseModal] = useState(false);
   const [newExerciseName, setNewExerciseName] = useState('');
   const [exercisesKey, setExercisesKey] = useState(0); // Force re-render
+  const [showTemplateGuide, setShowTemplateGuide] = useState(true);
 
   const muscles = getMusclesForPlan(activeWorkout.plan);
+  const template = activeWorkout.template ? getTemplate(activeWorkout.template) : null;
   const exercises = currentExercise.muscle_group
     ? getExercisesForMuscleWithCustom(currentExercise.muscle_group)
     : [];
@@ -155,6 +158,69 @@ const WorkoutSession = () => {
           </div>
         </div>
       </div>
+
+      {/* Template Guide */}
+      {template && showTemplateGuide && (
+        <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-2 border-purple-200 dark:border-purple-700 rounded-lg p-6 mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">📋</span>
+              <div>
+                <div className="font-bold text-purple-800 dark:text-purple-300">{template.name}</div>
+                <div className="text-sm text-purple-600 dark:text-purple-400">{template.description}</div>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowTemplateGuide(false)}
+              className="text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-200"
+            >
+              ✕ Hide
+            </button>
+          </div>
+
+          <div className="space-y-2">
+            <div className="text-sm font-medium text-purple-800 dark:text-purple-300 mb-2">
+              Recommended Exercises:
+            </div>
+            {template.exercises.map((exercise, idx) => (
+              <div
+                key={idx}
+                className="flex items-start gap-2 p-2 bg-white/50 dark:bg-gray-800/50 rounded text-sm"
+              >
+                <span className="font-semibold text-purple-700 dark:text-purple-300 min-w-[30px]">
+                  {idx + 1}.
+                </span>
+                <div className="flex-1">
+                  <div className="font-medium text-gray-800 dark:text-white">
+                    {exercise.muscle_group}: {exercise.exercise_name}
+                  </div>
+                  <div className="text-xs text-purple-600 dark:text-purple-400">
+                    {exercise.technique} • {exercise.target_reps}
+                  </div>
+                  {exercise.alternatives && exercise.alternatives.length > 0 && (
+                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                      Alternatives: {exercise.alternatives.join(', ')}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-4 p-3 bg-purple-100 dark:bg-purple-900/30 border border-purple-300 dark:border-purple-700 rounded text-xs text-purple-800 dark:text-purple-300">
+            💡 <strong>Tip:</strong> This is a suggested workout structure. You can follow it exactly or customize as needed!
+          </div>
+        </div>
+      )}
+
+      {!template && !showTemplateGuide && (
+        <button
+          onClick={() => setShowTemplateGuide(true)}
+          className="mb-6 text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-200 text-sm"
+        >
+          📋 Show Template Guide
+        </button>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left: Add New Exercise */}

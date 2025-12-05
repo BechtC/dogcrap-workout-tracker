@@ -43,8 +43,8 @@ const Competition = () => {
   return (
     <div className="container mx-auto px-4 py-6">
       <div className="mb-6">
-        <h2 className="text-3xl font-bold text-gray-800 mb-2">🏆 Competition Zone</h2>
-        <p className="text-gray-600">Chris vs Denis - May the best lifter win!</p>
+        <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">🏆 Competition Zone</h2>
+        <p className="text-gray-600 dark:text-gray-400">Chris vs Denis - May the best lifter win!</p>
       </div>
 
       {/* View Selector */}
@@ -183,8 +183,8 @@ const Competition = () => {
           </div>
 
           {/* Top 5 Battles */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-4">Top 5 Closest Battles</h3>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Top 5 Closest Battles</h3>
             <div className="space-y-3">
               {exerciseComparisons
                 .filter(ex => ex.christWeightDiff !== null)
@@ -197,7 +197,7 @@ const Competition = () => {
                     </div>
                     <div className="flex-1">
                       <div className="font-semibold">{ex.exercise}</div>
-                      <div className="text-sm text-gray-600">
+                      <div className="text-sm text-gray-600 dark:text-gray-400">
                         Chris: {ex.chrisWeight}kg vs Denis: {ex.denisWeight}kg
                         <span className="ml-2 text-purple-600 font-medium">
                           (Diff: {Math.abs(ex.weightDiff).toFixed(1)}kg)
@@ -217,7 +217,7 @@ const Competition = () => {
       {/* Exercise Detail Section */}
       {selectedView === 'exercise-detail' && (
         <div className="space-y-4">
-          <div className="bg-white rounded-lg shadow-md p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
             <div className="grid grid-cols-4 gap-2 p-3 bg-gray-100 rounded-lg font-semibold text-sm mb-2">
               <div>Exercise</div>
               <div className="text-center">Chris (Max Weight)</div>
@@ -280,12 +280,12 @@ const Competition = () => {
           </div>
 
           {/* Muscle Group Champions */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-4">Muscle Group Champions</h3>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Muscle Group Champions</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {getMuscleGroupChampions(exerciseComparisons).map((group, idx) => (
                 <div key={idx} className="p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg">
-                  <div className="font-semibold text-gray-800 mb-2">{group.muscle}</div>
+                  <div className="font-semibold text-gray-800 dark:text-white mb-2">{group.muscle}</div>
                   <div className="flex items-center justify-between">
                     <div className={`flex items-center gap-2 ${group.winner === 'chris' ? 'text-blue-600' : 'text-gray-400'}`}>
                       <span className="text-xl">💪</span>
@@ -305,8 +305,8 @@ const Competition = () => {
           </div>
 
           {/* Strength Gap Analysis */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-4">Biggest Strength Gaps</h3>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Biggest Strength Gaps</h3>
             <div className="space-y-3">
               {exerciseComparisons
                 .filter(ex => ex.weightDiff !== null && Math.abs(ex.weightDiff) > 5)
@@ -317,7 +317,7 @@ const Competition = () => {
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="font-semibold">{ex.exercise}</div>
-                        <div className="text-sm text-gray-600">
+                        <div className="text-sm text-gray-600 dark:text-gray-400">
                           {ex.weightDiff > 0 ? 'Chris' : 'Denis'} ahead by{' '}
                           <span className="font-bold text-purple-600">
                             {Math.abs(ex.weightDiff).toFixed(1)} kg
@@ -352,7 +352,7 @@ const Competition = () => {
 // Helper Components
 const StatRow = ({ label, value, winner }) => (
   <div className="flex justify-between items-center">
-    <span className="text-sm text-gray-600">{label}:</span>
+    <span className="text-sm text-gray-600 dark:text-gray-400">{label}:</span>
     <span className={`font-semibold ${winner ? 'text-green-600' : 'text-gray-700'}`}>
       {value} {winner && '👑'}
     </span>
@@ -365,19 +365,19 @@ const CompetitiveMetricCard = ({ title, chrisValue, denisValue, unit, icon }) =>
   const tied = chrisValue === denisValue;
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
       <div className="text-center mb-4">
         <div className="text-3xl mb-2">{icon}</div>
         <div className="font-bold text-gray-800">{title}</div>
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div className={`text-center p-3 rounded-lg ${chrisWins ? 'bg-blue-100 border-2 border-blue-500' : 'bg-gray-50'}`}>
-          <div className="text-xs text-gray-600 mb-1">Chris</div>
+          <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">Chris</div>
           <div className="font-bold text-lg">{chrisValue.toLocaleString()}</div>
           {chrisWins && <div className="text-xl mt-1">👑</div>}
         </div>
         <div className={`text-center p-3 rounded-lg ${denisWins ? 'bg-green-100 border-2 border-green-500' : 'bg-gray-50'}`}>
-          <div className="text-xs text-gray-600 mb-1">Denis</div>
+          <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">Denis</div>
           <div className="font-bold text-lg">{denisValue.toLocaleString()}</div>
           {denisWins && <div className="text-xl mt-1">👑</div>}
         </div>
